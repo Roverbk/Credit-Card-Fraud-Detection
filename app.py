@@ -401,11 +401,13 @@ with tab1:
         # ── Download ──
         st.markdown('<p class="section-label">Export</p>',
                     unsafe_allow_html=True)
-        csv = results_df.to_csv(index=False).encode('utf-8')
+        # Only flagged fraud transactions
+        fraud_only_df = results_df[results_df['flagged'] == 1].copy()
+        csv = fraud_only_df.to_csv(index=False).encode('utf-8')
         st.download_button(
-            label="Download scored results",
+            label=f"Download flagged transactions ({len(fraud_only_df):,})",
             data=csv,
-            file_name="fraud_scores.csv",
+            file_name="fraud_flagged.csv",
             mime="text/csv"
         )
 
